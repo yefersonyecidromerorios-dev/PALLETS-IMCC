@@ -1,0 +1,24 @@
+{
+  "name": "Escáner de Pallets SAP",
+  "short_name": "Pallets IMC",
+  "description": "Registro de UMs y ubicaciones para IMC Cargo",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F5F7",
+  "theme_color": "#F5C400",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
