@@ -1,7 +1,7 @@
-const CACHE = 'pallets-v1';
+const CACHE = 'pallets-v2';
 const ASSETS = [
-  '/',
-  '/index.html'
+  '/PALLETS-IMCC/',
+  '/PALLETS-IMCC/index.html'
 ];
 
 self.addEventListener('install', e => {
