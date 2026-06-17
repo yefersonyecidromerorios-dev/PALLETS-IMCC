@@ -190,14 +190,81 @@ tbody tr:last-child td { border-bottom: none; }
 .btn-torch {
   display: none; /* se muestra si hay soporte */
   align-items: center; gap: 6px;
-  padding: 8px 14px; background: rgba(255,255,255,.1);
-  border: 1.5px solid rgba(255,255,255,.2); border-radius: 50px;
-  color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;
+  padding: 10px 16px; background: rgba(255,255,255,.12);
+  border: 2px solid rgba(255,255,255,.25); border-radius: 50px;
+  color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: background .15s, border-color .15s, color .15s;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
 }
-.btn-torch i { font-size: 19px; }
-.btn-torch.on { background: rgba(245,196,0,.2); border-color: #F5C400; color: #F5C400; }
+.btn-torch i { font-size: 22px; }
+.btn-torch.on {
+  background: rgba(245,196,0,.28); border-color: #F5C400;
+  color: #F5C400; box-shadow: 0 0 14px rgba(245,196,0,.4);
+}
 .btn-torch:active { opacity: .7; }
+
+/* ── Controles inferiores de cámara: linterna + slider ── */
+.cam-controls {
+  display: flex; flex-direction: column; gap: 8px;
+  background: rgba(0,0,0,0.4); border-radius: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.cam-controls-row {
+  display: flex; align-items: center; gap: 10px;
+}
+.cam-controls-label {
+  font-size: 11px; color: rgba(255,255,255,.6);
+  letter-spacing: .06em; text-transform: uppercase;
+  white-space: nowrap; min-width: 54px;
+  display: flex; align-items: center; gap: 4px;
+}
+/* Slider zona de escaneo */
+.zone-slider-wrap {
+  flex: 1; display: flex; align-items: center; gap: 8px;
+}
+.zone-slider {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  height: 5px; border-radius: 5px; outline: none;
+  background: rgba(255,255,255,.2);
+  cursor: pointer;
+}
+.zone-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #F5C400; border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.5); cursor: pointer;
+}
+.zone-slider::-moz-range-thumb {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #F5C400; border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.5); cursor: pointer; border: none;
+}
+.zone-slider::-webkit-slider-runnable-track {
+  height: 5px; border-radius: 5px;
+}
+.zone-slider-val {
+  font-size: 13px; font-weight: 700; color: #F5C400;
+  font-family: 'Courier New', monospace; min-width: 38px; text-align: right;
+}
+/* Botón linterna grande dentro de controles */
+.btn-torch-big {
+  display: none;
+  align-items: center; justify-content: center; gap: 10px;
+  width: 100%;
+  padding: 13px 18px; background: rgba(255,255,255,.1);
+  border: 2px solid rgba(255,255,255,.22); border-radius: 12px;
+  color: rgba(255,255,255,.85); font-size: 15px; font-weight: 700; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all .15s;
+}
+.btn-torch-big i { font-size: 22px; }
+.btn-torch-big.on {
+  background: rgba(245,196,0,.22); border-color: #F5C400;
+  color: #F5C400; box-shadow: 0 0 16px rgba(245,196,0,.35);
+}
+.btn-torch-big:active { opacity: .7; }
 
 /* ── Video — ocupa TODO el espacio disponible ── */
 .cam-video-wrap {
@@ -275,10 +342,9 @@ tbody tr:last-child td { border-bottom: none; }
 /* ── Panel inferior ── */
 .cam-bottom {
   flex-shrink: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-  padding: 14px 16px 28px;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 70%, transparent 100%);
+  padding: 12px 16px 30px;
   display: flex; flex-direction: column; gap: 10px;
-  min-height: 140px; justify-content: flex-end;
 }
 
 /* Resultado detectado */
@@ -486,6 +552,28 @@ tbody tr:last-child td { border-bottom: none; }
       <div class="cam-det-label">Código detectado</div>
       <div class="cam-det-val" id="camDetVal"></div>
     </div>
+
+    <!-- Controles: linterna + slider zona -->
+    <div class="cam-controls">
+      <!-- Linterna -->
+      <button class="btn-torch-big" id="btnTorchBig" onclick="toggleTorch()">
+        <i class="ti ti-bolt-off" id="torchIconBig"></i>
+        <span id="torchTxtBig">Linterna apagada</span>
+      </button>
+
+      <!-- Slider zona de escaneo -->
+      <div class="cam-controls-row">
+        <span class="cam-controls-label"><i class="ti ti-scan"></i> Zona</span>
+        <div class="zone-slider-wrap">
+          <i class="ti ti-minus" style="color:rgba(255,255,255,.4);font-size:16px;"></i>
+          <input class="zone-slider" id="zoneSlider" type="range" min="15" max="70" value="30"
+            oninput="ajustarZona(this.value)" />
+          <i class="ti ti-plus" style="color:rgba(255,255,255,.4);font-size:16px;"></i>
+        </div>
+        <span class="zone-slider-val" id="zoneSliderVal">30%</span>
+      </div>
+    </div>
+
     <div class="cam-btns">
       <button class="btn-cam-ok" id="btnCamOk" onclick="confirmarScan()">
         <i class="ti ti-check"></i> Usar este código
@@ -560,6 +648,7 @@ function abrirCamara(target) {
     target === 'UM' ? '📦 Escaneando UM' : '📍 Escaneando Ubicación';
   document.getElementById('camErr').classList.remove('show');
   document.getElementById('camOverlay').classList.add('show');
+  initSlider();
 
   /* Constraints: trasera + alta resolución + autofocus continuo */
   navigator.mediaDevices.getUserMedia({
@@ -588,8 +677,10 @@ function arrancarStream(stream) {
   const track = stream.getVideoTracks()[0];
   if (track?.getCapabilities) {
     torchOk = !!(track.getCapabilities().torch);
-    const btn = document.getElementById('btnTorch');
-    btn.style.display = torchOk ? 'flex' : 'none';
+    const btn    = document.getElementById('btnTorch');
+    const btnBig = document.getElementById('btnTorchBig');
+    btn.style.display    = 'none'; /* Solo mostramos el botón grande inferior */
+    btnBig.style.display = torchOk ? 'flex' : 'none';
   }
 
   video.onloadedmetadata = () => {
@@ -608,6 +699,7 @@ function cerrarCamara() {
   const v = document.getElementById('videoEl');
   if (v.srcObject) { v.srcObject.getTracks().forEach(t => t.stop()); v.srcObject = null; }
   torchOn = false; actualizarTorch();
+  guardarZonaPref();
 }
 
 function confirmarScan() {
@@ -652,11 +744,12 @@ function iniciarLoop() {
     /* ── Recortar SOLO la franja central del video (30% alto) ── */
     const vw = video.videoWidth;
     const vh = video.videoHeight;
-    /* La zona visible es el 30% central en alto y 88% en ancho */
+    /* La zona visible es zonePct% central en alto y 88% en ancho */
+    const margen = (100 - zonePct) / 2 / 100;
     const cropW = Math.round(vw * 0.88);
-    const cropH = Math.round(vh * 0.30);
+    const cropH = Math.round(vh * (zonePct / 100));
     const cropX = Math.round((vw - cropW) / 2);
-    const cropY = Math.round(vh * 0.35);   /* top 35% → empieza la zona */
+    const cropY = Math.round(vh * margen);
 
     offscreen.width  = cropW;
     offscreen.height = cropH;
@@ -711,8 +804,53 @@ function onDetectado(texto) {
 }
 
 /* =====================================================
-   LINTERNA
+   ZONA DE ESCANEO AJUSTABLE
    ===================================================== */
+let zonePct = 30; /* % de alto que ocupa la zona (por defecto 30%) */
+
+function ajustarZona(val) {
+  zonePct = parseInt(val);
+  document.getElementById('zoneSliderVal').textContent = zonePct + '%';
+
+  /* Pintar el track del slider (compatible con Chrome/Safari móvil) */
+  const slider = document.getElementById('zoneSlider');
+  const pct = ((zonePct - 15) / (70 - 15)) * 100;
+  slider.style.background =
+    `linear-gradient(to right, #F5C400 ${pct}%, rgba(255,255,255,0.2) ${pct}%)`;
+
+  /* Calcular márgenes: zona centrada verticalmente */
+  const margen = Math.round((100 - zonePct) / 2);
+
+  /* Zona visual (marco amarillo) */
+  const zone = document.getElementById('camZone');
+  zone.style.top    = margen + '%';
+  zone.style.bottom = margen + '%';
+
+  /* Sombras arriba/abajo */
+  const shadeTop    = document.querySelector('.cam-shade-top');
+  const shadeBottom = document.querySelector('.cam-shade-bottom');
+  shadeTop.style.height    = margen + '%';
+  shadeBottom.style.height = margen + '%';
+
+  /* Hint de texto justo encima de la zona */
+  document.querySelector('.cam-hint').style.top = Math.max(margen - 9, 1) + '%';
+}
+
+/* Inicializar slider con valor guardado o default */
+function initSlider() {
+  const saved = parseInt(localStorage.getItem('zonePct') || '30');
+  zonePct = saved;
+  const slider = document.getElementById('zoneSlider');
+  slider.value = saved;
+  ajustarZona(saved);
+}
+
+/* Guardar preferencia al cerrar */
+function guardarZonaPref() {
+  localStorage.setItem('zonePct', zonePct);
+}
+
+
 async function toggleTorch() {
   if (!activeStream) return;
   const track = activeStream.getVideoTracks()[0];
@@ -727,10 +865,16 @@ async function toggleTorch() {
   }
 }
 function actualizarTorch() {
-  const btn = document.getElementById('btnTorch');
+  const btn    = document.getElementById('btnTorch');
+  const btnBig = document.getElementById('btnTorchBig');
+  // Barra superior
   document.getElementById('torchIcon').className = torchOn ? 'ti ti-bolt' : 'ti ti-bolt-off';
   document.getElementById('torchTxt').textContent = torchOn ? 'Encendida' : 'Linterna';
   btn.classList.toggle('on', torchOn);
+  // Botón grande inferior
+  document.getElementById('torchIconBig').className = torchOn ? 'ti ti-bolt' : 'ti ti-bolt-off';
+  document.getElementById('torchTxtBig').textContent = torchOn ? '💡 Linterna encendida' : 'Linterna apagada';
+  btnBig.classList.toggle('on', torchOn);
 }
 
 /* =====================================================
