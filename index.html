@@ -204,26 +204,7 @@ tbody tr:last-child td { border-bottom: none; }
 }
 .btn-torch:active { opacity: .7; }
 
-/* ── Controles inferiores de cámara: linterna + slider ── */
-.cam-controls {
-  display: flex; flex-direction: column; gap: 8px;
-  background: rgba(0,0,0,0.4); border-radius: 14px;
-  padding: 12px 14px;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.cam-controls-row {
-  display: flex; align-items: center; gap: 10px;
-}
-.cam-controls-label {
-  font-size: 11px; color: rgba(255,255,255,.6);
-  letter-spacing: .06em; text-transform: uppercase;
-  white-space: nowrap; min-width: 54px;
-  display: flex; align-items: center; gap: 4px;
-}
-/* Slider zona de escaneo */
-.zone-slider-wrap {
-  flex: 1; display: flex; align-items: center; gap: 8px;
-}
+/* zona-slider-wrap ya no se usa — ver .cam-slider-row */
 .zone-slider {
   flex: 1; -webkit-appearance: none; appearance: none;
   height: 5px; border-radius: 5px; outline: none;
@@ -339,12 +320,22 @@ tbody tr:last-child td { border-bottom: none; }
   padding: 5px 14px; border-radius: 20px; letter-spacing: .02em;
 }
 
-/* ── Panel inferior ── */
-.cam-bottom {
-  flex-shrink: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 70%, transparent 100%);
-  padding: 12px 16px 30px;
-  display: flex; flex-direction: column; gap: 10px;
+/* ── Panel flotante inferior — SOBRE el video, position absolute ── */
+.cam-float-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 5;
+  padding: 10px 14px 28px;
+  display: flex; flex-direction: column; gap: 8px;
+  background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
+}
+
+/* Slider zona — fila compacta */
+.cam-slider-row {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 10px 12px;
 }
 
 /* Resultado detectado */
@@ -536,49 +527,48 @@ tbody tr:last-child td { border-bottom: none; }
     <!-- Texto de ayuda -->
     <div class="cam-hint"><span>Centra el código dentro del marco</span></div>
 
+    <!-- ══ PANEL FLOTANTE INFERIOR (sobre el video) ══ -->
+    <div class="cam-float-bottom">
+
+      <!-- Estado de espera / detectado -->
+      <div class="cam-waiting" id="camWaiting">Apunta el código al marco amarillo…</div>
+      <div class="cam-detected" id="camDetected">
+        <div class="cam-det-label">Código detectado</div>
+        <div class="cam-det-val" id="camDetVal"></div>
+      </div>
+
+      <!-- Slider zona de escaneo -->
+      <div class="cam-slider-row">
+        <i class="ti ti-scan" style="color:#F5C400;font-size:18px;flex-shrink:0;"></i>
+        <i class="ti ti-minus" style="color:rgba(255,255,255,.5);font-size:15px;flex-shrink:0;"></i>
+        <input class="zone-slider" id="zoneSlider" type="range" min="15" max="70" value="30"
+          oninput="ajustarZona(this.value)" />
+        <i class="ti ti-plus" style="color:rgba(255,255,255,.5);font-size:15px;flex-shrink:0;"></i>
+        <span class="zone-slider-val" id="zoneSliderVal">30%</span>
+      </div>
+
+      <!-- Linterna (solo si el dispositivo la soporta) -->
+      <button class="btn-torch-big" id="btnTorchBig" onclick="toggleTorch()">
+        <i class="ti ti-bolt-off" id="torchIconBig"></i>
+        <span id="torchTxtBig">Linterna apagada</span>
+      </button>
+
+      <!-- Botones Usar / Cancelar -->
+      <div class="cam-btns">
+        <button class="btn-cam-ok" id="btnCamOk" onclick="confirmarScan()">
+          <i class="ti ti-check"></i> Usar este código
+        </button>
+        <button class="btn-cam-cancel" onclick="cerrarCamara()">Cancelar</button>
+      </div>
+
+    </div><!-- /cam-float-bottom -->
+
     <!-- Error / permiso denegado -->
     <div class="cam-err" id="camErr">
       <i class="ti ti-camera-off"></i>
       <div class="cam-err-msg" id="camErrMsg">No se pudo acceder a la cámara</div>
       <div class="cam-err-hint" id="camErrHint">Verifica los permisos en tu navegador</div>
       <button class="btn-retry" onclick="reintentar()">Reintentar</button>
-    </div>
-  </div>
-
-  <!-- Panel inferior -->
-  <div class="cam-bottom">
-    <div class="cam-waiting" id="camWaiting">Apunta el código de barras al marco amarillo…</div>
-    <div class="cam-detected" id="camDetected">
-      <div class="cam-det-label">Código detectado</div>
-      <div class="cam-det-val" id="camDetVal"></div>
-    </div>
-
-    <!-- Controles: linterna + slider zona -->
-    <div class="cam-controls">
-      <!-- Linterna -->
-      <button class="btn-torch-big" id="btnTorchBig" onclick="toggleTorch()">
-        <i class="ti ti-bolt-off" id="torchIconBig"></i>
-        <span id="torchTxtBig">Linterna apagada</span>
-      </button>
-
-      <!-- Slider zona de escaneo -->
-      <div class="cam-controls-row">
-        <span class="cam-controls-label"><i class="ti ti-scan"></i> Zona</span>
-        <div class="zone-slider-wrap">
-          <i class="ti ti-minus" style="color:rgba(255,255,255,.4);font-size:16px;"></i>
-          <input class="zone-slider" id="zoneSlider" type="range" min="15" max="70" value="30"
-            oninput="ajustarZona(this.value)" />
-          <i class="ti ti-plus" style="color:rgba(255,255,255,.4);font-size:16px;"></i>
-        </div>
-        <span class="zone-slider-val" id="zoneSliderVal">30%</span>
-      </div>
-    </div>
-
-    <div class="cam-btns">
-      <button class="btn-cam-ok" id="btnCamOk" onclick="confirmarScan()">
-        <i class="ti ti-check"></i> Usar este código
-      </button>
-      <button class="btn-cam-cancel" onclick="cerrarCamara()">Cancelar</button>
     </div>
   </div>
 
