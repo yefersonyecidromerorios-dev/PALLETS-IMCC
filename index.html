@@ -1,17 +1,4 @@
-bash
-
-python3 - <<'PYEOF'
-import json
-
-with open("/home/claude/ubic_to_cod.json") as f:
-    ubic_to_cod = json.load(f)
-with open("/home/claude/cod_to_ubic.json") as f:
-    cod_to_ubic = json.load(f)
-
-u2c_js = json.dumps(ubic_to_cod, ensure_ascii=False, separators=(',',':'))
-c2u_js = json.dumps(cod_to_ubic, ensure_ascii=False, separators=(',',':'))
-
-html = r"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
@@ -351,13 +338,21 @@ tbody tr:last-child td { border-bottom: none; }
           <i class="ti ti-camera"></i>
         </button>
       </div>
+      <div class="field-hint" id="ubicHint"></div>
     </div>
-    <!-- Campo CODIGO (solo lectura, auto-llenado) -->
+    <!-- Campo CODIGO: ahora también escaneable/editable, con lookup inverso -->
     <div class="field-wrap">
-      <label class="field-label">Código SAP <span style="font-weight:400;text-transform:none;letter-spacing:0;">(auto)</span></label>
-      <input class="scan-input" id="inputCodSAP"
-        placeholder="Se llena automáticamente..."
-        readonly style="cursor:default;" />
+      <label class="field-label">Código <span style="font-weight:400;text-transform:none;letter-spacing:0;">(auto / manual)</span></label>
+      <div class="input-cam-row">
+        <input class="scan-input" id="inputCodSAP"
+          placeholder="Se completa automático, o escribe/escanea el código..."
+          onkeydown="handleEnter(event)"
+          oninput="onCodInput(this)"
+          autocomplete="off" />
+        <button class="btn-cam" id="btnCamCOD" onclick="abrirCamara('COD')" title="Escanear con cámara">
+          <i class="ti ti-camera"></i>
+        </button>
+      </div>
       <div class="field-hint" id="codHint"></div>
     </div>
     <div class="btn-row">
@@ -466,8 +461,8 @@ tbody tr:last-child td { border-bottom: none; }
    ubic_to_cod : UBICACION(upper) -> CODIGO
    cod_to_ubic : CODIGO(upper)    -> UBICACION
    ===================================================== */
-const UBIC_TO_COD = """ + u2c_js + r""";
-const COD_TO_UBIC = """ + c2u_js + r""";
+const UBIC_TO_COD = __UBIC_TO_COD__;
+const COD_TO_UBIC = __COD_TO_UBIC__;
 
 function lookupCodigo(ubicacion) {
   if (!ubicacion) return '';
@@ -485,10 +480,21 @@ let db = [];
 try { db = JSON.parse(localStorage.getItem('palletDB') || '[]'); } catch(e) { db = []; }
 
 /* =====================================================
-   AUTO-LLENADO: cuando el usuario escribe/escanea la ubicación
+   AUTO-LLENADO BIDIRECCIONAL
+   Ubicación -> Código  y  Código -> Ubicación
    ===================================================== */
 function onUbicInput(input) {
+  // si este campo tenía un estilo "auto" puesto por el código, lo limpiamos
+  // porque ahora el usuario está escribiendo/escaneando la ubicación directamente
+  input.classList.remove('auto-filled', 'not-found');
+  document.getElementById('ubicHint').textContent = '';
   actualizarCodSAP(input.value);
+}
+
+function onCodInput(input) {
+  input.classList.remove('auto-filled', 'not-found');
+  document.getElementById('codHint').textContent = '';
+  actualizarUbicacion(input.value);
 }
 
 function actualizarCodSAP(ubicVal) {
@@ -516,6 +522,31 @@ function actualizarCodSAP(ubicVal) {
   }
 }
 
+function actualizarUbicacion(codVal) {
+  const ubicField = document.getElementById('inputDesc');
+  const hint      = document.getElementById('ubicHint');
+  const val       = (codVal || '').trim();
+
+  if (!val) {
+    ubicField.value = '';
+    ubicField.className = 'scan-input';
+    hint.textContent = '';
+    return;
+  }
+  const ubic = lookupUbicacion(val);
+  if (ubic) {
+    ubicField.value = ubic;
+    ubicField.className = 'scan-input auto-filled';
+    hint.textContent = '✔ Ubicación encontrada en la tabla de códigos';
+    hint.style.color = '#10B981';
+  } else {
+    ubicField.value = 'N/A';
+    ubicField.className = 'scan-input not-found';
+    hint.textContent = '⚠ Código no encontrado en la tabla — se registrará como N/A';
+    hint.style.color = '#D97706';
+  }
+}
+
 /* =====================================================
    DETECCIÓN WEBVIEW
    ===================================================== */
@@ -538,7 +569,7 @@ function abrirChrome() {
 function verificarEntorno() {
   if (!esWebView()) return;
   document.getElementById('webviewBanner').classList.add('show');
-  ['btnCamUM','btnCamUBIC'].forEach(id => {
+  ['btnCamUM','btnCamUBIC','btnCamCOD'].forEach(id => {
     const b = document.getElementById(id);
     b.classList.add('blocked');
     b.onclick = () => {
@@ -570,7 +601,9 @@ function abrirCamara(target) {
   scanActive = true;
   resetUI();
   document.getElementById('camLabel').textContent =
-    target === 'UM' ? '📦 Escaneando UM' : '📍 Escaneando Ubicación';
+    target === 'UM'   ? '📦 Escaneando UM' :
+    target === 'UBIC' ? '📍 Escaneando Ubicación' :
+                         '🔢 Escaneando Código';
   document.getElementById('camErr').classList.remove('show');
   document.getElementById('camOverlay').classList.add('show');
   initSlider();
@@ -625,9 +658,14 @@ function confirmarScan() {
   if (!lastResult) return;
   if (camTarget === 'UM') {
     document.getElementById('inputCodigo').value = lastResult;
-  } else {
-    document.getElementById('inputDesc').value = lastResult;
-    actualizarCodSAP(lastResult);
+  } else if (camTarget === 'UBIC') {
+    const f = document.getElementById('inputDesc');
+    f.value = lastResult;
+    onUbicInput(f);
+  } else if (camTarget === 'COD') {
+    const f = document.getElementById('inputCodSAP');
+    f.value = lastResult;
+    onCodInput(f);
   }
   cerrarCamara();
   /* Foco al otro campo si está vacío */
@@ -839,6 +877,8 @@ function guardarRegistro() {
 function limpiarCampos() {
   document.getElementById('inputCodigo').value  = '';
   document.getElementById('inputDesc').value    = '';
+  document.getElementById('inputDesc').className   = 'scan-input';
+  document.getElementById('ubicHint').textContent  = '';
   document.getElementById('inputCodSAP').value  = '';
   document.getElementById('inputCodSAP').className = 'scan-input';
   document.getElementById('codHint').textContent   = '';
@@ -895,7 +935,7 @@ function renderTabla() {
     <thead><tr>
       <th>UM (pallet)</th>
       <th>Ubicación</th>
-      <th>Código SAP</th>
+      <th>Código</th>
       <th style="text-align:right;">Fecha / Hora</th>
       <th></th>
     </tr></thead>
@@ -924,7 +964,7 @@ function exportarExcel() {
   const datos = db.map(r=>({
     'UM (pallet)': r.codigo,
     'Ubicación':   r.descripcion||'',
-    'Código SAP':  r.codSAP||'N/A',
+    'Código':      r.codSAP||'N/A',
     'Fecha':       r.fecha,
     'Hora':        r.hora
   }));
@@ -940,7 +980,7 @@ function exportarCSV() {
   if (!db.length) { showFlash('No hay datos para exportar.', 'error'); return; }
   const rows = db.map(r=>[r.codigo, r.descripcion||'', r.codSAP||'N/A', r.fecha, r.hora]
     .map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob = new Blob(['\uFEFF'+'UM (pallet),Ubicación,Código SAP,Fecha,Hora\n'+rows],{type:'text/csv;charset=utf-8;'});
+  const blob = new Blob(['\uFEFF'+'UM (pallet),Ubicación,Código,Fecha,Hora\n'+rows],{type:'text/csv;charset=utf-8;'});
   const a = Object.assign(document.createElement('a'),
     {href:URL.createObjectURL(blob), download:'pallets_'+new Date().toISOString().slice(0,10)+'.csv'});
   a.click(); URL.revokeObjectURL(a.href);
@@ -964,11 +1004,4 @@ actualizarStats();
   }
 </script>
 </body>
-</html>"""
-
-with open("/home/claude/index.html", "w", encoding="utf-8") as f:
-    f.write(html)
-
-print(f"Done. File size: {len(html):,} bytes")
-PYEOF
-Salida
+</html>
