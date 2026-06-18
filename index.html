@@ -14,6 +14,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
+/* =========================================================
+   BASE
+   ========================================================= */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -22,6 +25,7 @@ body {
 }
 .app { max-width: 600px; margin: 0 auto; }
 
+/* HEADER */
 .header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
 .header-icon {
   width: 44px; height: 44px; background: #F5C400;
@@ -31,6 +35,7 @@ body {
 .header-title { font-size: 18px; font-weight: 700; }
 .header-sub { font-size: 12px; color: #6B7280; margin-top: 2px; }
 
+/* FLASH */
 .flash-bar {
   padding: 12px 14px; border-radius: 10px; font-size: 14px;
   font-family: monospace; margin-bottom: 14px;
@@ -39,8 +44,8 @@ body {
 .flash-bar.show { display: flex; }
 .flash-bar.success { background: #D1FAE5; color: #065F46; }
 .flash-bar.error   { background: #FEE2E2; color: #991B1B; }
-.flash-bar.info    { background: #DBEAFE; color: #1E40AF; }
 
+/* BANNER WEBVIEW */
 .webview-banner {
   display: none; background: #1A1D23;
   border: 1.5px solid #F5C400; border-radius: 14px;
@@ -67,6 +72,7 @@ body {
   cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;
 }
 
+/* PANEL */
 .scan-panel {
   background: #fff; border-radius: 14px; padding: 18px;
   margin-bottom: 14px; border: 1px solid #E5E7EB;
@@ -74,7 +80,6 @@ body {
 }
 .field-wrap { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
 .field-label { font-size: 11px; color: #6B7280; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-.field-hint { font-size: 11px; color: #9CA3AF; margin-top: 2px; }
 .input-cam-row { display: flex; gap: 8px; align-items: stretch; }
 .scan-input {
   flex: 1; padding: 13px 14px;
@@ -85,14 +90,6 @@ body {
   -webkit-appearance: none; appearance: none;
 }
 .scan-input:focus { outline: none; border-color: #F5C400; box-shadow: 0 0 0 3px rgba(245,196,0,0.2); background: #fff; }
-/* campo auto-llenado */
-.scan-input.auto-filled {
-  border-color: #10B981; background: #F0FDF4;
-  color: #065F46; font-weight: 600;
-}
-.scan-input.not-found {
-  border-color: #F59E0B; background: #FFFBEB;
-}
 .btn-cam {
   padding: 0 16px; background: #1A1D23; border: none; border-radius: 10px;
   color: #F5C400; font-size: 22px; cursor: pointer;
@@ -118,11 +115,13 @@ body {
 }
 .btn-secondary:active { background: #F9FAFB; }
 
+/* STATS */
 .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
 .stat-card { background: #fff; border-radius: 10px; padding: 12px 14px; border: 1px solid #E5E7EB; text-align: center; }
 .stat-label { font-size: 11px; color: #6B7280; margin-bottom: 4px; }
 .stat-value { font-size: 24px; font-weight: 700; font-family: 'Courier New', monospace; }
 
+/* TABLA */
 .table-wrap { background: #fff; border-radius: 14px; border: 1px solid #E5E7EB; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
 .table-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid #E5E7EB; flex-wrap: wrap; gap: 8px; }
 .table-title { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
@@ -144,7 +143,7 @@ body {
 }
 .search-input:focus { outline: none; border-color: #F5C400; }
 .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 460px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 380px; }
 thead tr { background: #F9FAFB; }
 th { padding: 9px 12px; text-align: left; font-size: 10px; font-weight: 700; color: #6B7280; letter-spacing: .05em; text-transform: uppercase; border-bottom: 1px solid #E5E7EB; white-space: nowrap; }
 td { padding: 11px 12px; border-bottom: 1px solid #F3F4F6; vertical-align: middle; }
@@ -152,17 +151,6 @@ tbody tr:last-child td { border-bottom: none; }
 .td-mono { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 600; word-break: break-all; }
 .td-muted { color: #6B7280; font-size: 12px; }
 .td-right { text-align: right; font-family: 'Courier New', monospace; font-size: 11px; color: #9CA3AF; white-space: nowrap; }
-/* CODIGO badge en la tabla */
-.td-cod {
-  font-family: 'Courier New', monospace; font-size: 12px; font-weight: 700;
-  white-space: nowrap;
-}
-.badge-cod {
-  display: inline-block; padding: 2px 8px;
-  border-radius: 6px; font-size: 12px; font-family: 'Courier New', monospace; font-weight: 700;
-}
-.badge-cod.found   { background: #D1FAE5; color: #065F46; }
-.badge-cod.na      { background: #F3F4F6; color: #9CA3AF; }
 .btn-del { background: none; border: none; cursor: pointer; color: #D1D5DB; padding: 6px; border-radius: 6px; display: flex; align-items: center; font-size: 18px; -webkit-tap-highlight-color: transparent; }
 .btn-del:active { color: #DC2626; background: #FEE2E2; }
 .empty-state { padding: 40px 20px; text-align: center; color: #9CA3AF; }
@@ -171,7 +159,7 @@ tbody tr:last-child td { border-bottom: none; }
 .footer { text-align: center; margin-top: 20px; font-size: 11px; color: #9CA3AF; padding-bottom: 20px; }
 
 /* =========================================================
-   MODAL CÁMARA
+   MODAL CÁMARA — PANTALLA COMPLETA, OPTIMIZADO MÓVIL
    ========================================================= */
 .cam-overlay {
   display: none; position: fixed; inset: 0;
@@ -179,6 +167,8 @@ tbody tr:last-child td { border-bottom: none; }
   flex-direction: column;
 }
 .cam-overlay.show { display: flex; }
+
+/* ── Barra superior ── */
 .cam-bar {
   position: relative; z-index: 2;
   display: flex; align-items: center; justify-content: space-between;
@@ -195,8 +185,10 @@ tbody tr:last-child td { border-bottom: none; }
   animation: blink 1.1s ease-in-out infinite;
 }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+/* Botón linterna en la barra */
 .btn-torch {
-  display: none;
+  display: none; /* se muestra si hay soporte */
   align-items: center; gap: 6px;
   padding: 10px 16px; background: rgba(255,255,255,.12);
   border: 2px solid rgba(255,255,255,.25); border-radius: 50px;
@@ -206,12 +198,18 @@ tbody tr:last-child td { border-bottom: none; }
   box-shadow: 0 2px 8px rgba(0,0,0,.3);
 }
 .btn-torch i { font-size: 22px; }
-.btn-torch.on { background: rgba(245,196,0,.28); border-color: #F5C400; color: #F5C400; box-shadow: 0 0 14px rgba(245,196,0,.4); }
+.btn-torch.on {
+  background: rgba(245,196,0,.28); border-color: #F5C400;
+  color: #F5C400; box-shadow: 0 0 14px rgba(245,196,0,.4);
+}
 .btn-torch:active { opacity: .7; }
+
+/* zona-slider-wrap ya no se usa — ver .cam-slider-row */
 .zone-slider {
   flex: 1; -webkit-appearance: none; appearance: none;
   height: 5px; border-radius: 5px; outline: none;
-  background: rgba(255,255,255,.2); cursor: pointer;
+  background: rgba(255,255,255,.2);
+  cursor: pointer;
 }
 .zone-slider::-webkit-slider-thumb {
   -webkit-appearance: none; appearance: none;
@@ -224,7 +222,14 @@ tbody tr:last-child td { border-bottom: none; }
   background: #F5C400; border: 3px solid #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,.5); cursor: pointer; border: none;
 }
-.zone-slider-val { font-size: 13px; font-weight: 700; color: #F5C400; font-family: 'Courier New', monospace; min-width: 38px; text-align: right; }
+.zone-slider::-webkit-slider-runnable-track {
+  height: 5px; border-radius: 5px;
+}
+.zone-slider-val {
+  font-size: 13px; font-weight: 700; color: #F5C400;
+  font-family: 'Courier New', monospace; min-width: 38px; text-align: right;
+}
+/* Botón linterna grande dentro de controles */
 .btn-torch-big {
   display: none;
   align-items: center; justify-content: center; gap: 10px;
@@ -232,54 +237,159 @@ tbody tr:last-child td { border-bottom: none; }
   padding: 13px 18px; background: rgba(255,255,255,.1);
   border: 2px solid rgba(255,255,255,.22); border-radius: 12px;
   color: rgba(255,255,255,.85); font-size: 15px; font-weight: 700; cursor: pointer;
-  -webkit-tap-highlight-color: transparent; transition: all .15s;
+  -webkit-tap-highlight-color: transparent;
+  transition: all .15s;
 }
 .btn-torch-big i { font-size: 22px; }
-.btn-torch-big.on { background: rgba(245,196,0,.22); border-color: #F5C400; color: #F5C400; box-shadow: 0 0 16px rgba(245,196,0,.35); }
+.btn-torch-big.on {
+  background: rgba(245,196,0,.22); border-color: #F5C400;
+  color: #F5C400; box-shadow: 0 0 16px rgba(245,196,0,.35);
+}
 .btn-torch-big:active { opacity: .7; }
-.cam-video-wrap { position: relative; flex: 1; overflow: hidden; background: #000; }
-#videoEl { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
-.cam-shade-top, .cam-shade-bottom { position: absolute; left: 0; right: 0; background: rgba(0,0,0,0.55); pointer-events: none; z-index: 1; }
+
+/* ── Video — ocupa TODO el espacio disponible ── */
+.cam-video-wrap {
+  position: relative;
+  flex: 1;          /* se expande para llenar la pantalla */
+  overflow: hidden;
+  background: #000;
+}
+#videoEl {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;  /* rellena sin deformar */
+  display: block;
+}
+
+/* Zona de enfoque: banda horizontal centrada, 30% de alto */
+/* Oscurecer lo que está FUERA de la zona */
+.cam-shade-top,
+.cam-shade-bottom {
+  position: absolute; left: 0; right: 0;
+  background: rgba(0,0,0,0.55);
+  pointer-events: none; z-index: 1;
+}
 .cam-shade-top    { top: 0;   height: 35%; }
 .cam-shade-bottom { bottom: 0; height: 35%; }
-.cam-zone { position: absolute; left: 6%; right: 6%; top: 35%; bottom: 35%; z-index: 2; pointer-events: none; }
-.cam-zone::before, .cam-zone::after, .cam-zone .cz-br, .cam-zone .cz-bl { content: ''; position: absolute; width: 28px; height: 28px; border-color: #F5C400; border-style: solid; }
-.cam-zone::before { top:0; left:0; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
-.cam-zone::after  { top:0; right:0; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+
+/* Marco de la zona de escaneo */
+.cam-zone {
+  position: absolute; left: 6%; right: 6%;
+  top: 35%; bottom: 35%;
+  z-index: 2; pointer-events: none;
+}
+/* Las 4 esquinas del marco */
+.cam-zone::before, .cam-zone::after,
+.cam-zone .cz-br, .cam-zone .cz-bl {
+  content: ''; position: absolute;
+  width: 28px; height: 28px;
+  border-color: #F5C400; border-style: solid;
+}
+.cam-zone::before { top:0;    left:0;  border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+.cam-zone::after  { top:0;    right:0; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
 .cam-zone .cz-br  { bottom:0; right:0; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
-.cam-zone .cz-bl  { bottom:0; left:0; border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+.cam-zone .cz-bl  { bottom:0; left:0;  border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+
+/* Línea de escaneo animada dentro de la zona */
 .cam-scanline {
   position: absolute; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent 0%, rgba(245,196,0,.25) 10%, #F5C400 50%, rgba(245,196,0,.25) 90%, transparent 100%);
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(245,196,0,.25) 10%,
+    #F5C400 50%,
+    rgba(245,196,0,.25) 90%,
+    transparent 100%);
   box-shadow: 0 0 10px rgba(245,196,0,.7), 0 0 24px rgba(245,196,0,.3);
   animation: scan 1.6s cubic-bezier(.4,0,.6,1) infinite;
 }
-@keyframes scan { 0%{top:2px;opacity:.4} 8%{opacity:1} 92%{opacity:1} 100%{top:calc(100% - 2px);opacity:.4} }
-.cam-hint { position: absolute; left: 0; right: 0; top: 27%; text-align: center; z-index: 3; pointer-events: none; }
-.cam-hint span { display: inline-block; background: rgba(0,0,0,.55); color: rgba(255,255,255,.75); font-size: 12px; padding: 5px 14px; border-radius: 20px; letter-spacing: .02em; }
+@keyframes scan {
+  0%   { top: 2px;         opacity: .4; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { top: calc(100% - 2px); opacity: .4; }
+}
+
+/* Texto de ayuda sobre la zona */
+.cam-hint {
+  position: absolute; left: 0; right: 0; top: 27%;
+  text-align: center; z-index: 3; pointer-events: none;
+}
+.cam-hint span {
+  display: inline-block; background: rgba(0,0,0,.55);
+  color: rgba(255,255,255,.75); font-size: 12px;
+  padding: 5px 14px; border-radius: 20px; letter-spacing: .02em;
+}
+
+/* ── Panel flotante inferior — SOBRE el video, position absolute ── */
 .cam-float-bottom {
-  position: absolute; bottom: 0; left: 0; right: 0; z-index: 5;
-  padding: 10px 14px 28px; display: flex; flex-direction: column; gap: 8px;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 5;
+  padding: 10px 14px 28px;
+  display: flex; flex-direction: column; gap: 8px;
   background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
 }
-.cam-slider-row { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 10px 12px; }
-.cam-detected { display: none; background: rgba(245,196,0,.12); border: 1.5px solid rgba(245,196,0,.5); border-radius: 12px; padding: 10px 14px; flex-direction: column; gap: 3px; }
+
+/* Slider zona — fila compacta */
+.cam-slider-row {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 10px 12px;
+}
+
+/* Resultado detectado */
+.cam-detected {
+  display: none;
+  background: rgba(245,196,0,.12);
+  border: 1.5px solid rgba(245,196,0,.5);
+  border-radius: 12px; padding: 10px 14px;
+  flex-direction: column; gap: 3px;
+}
 .cam-detected.show { display: flex; }
 .cam-det-label { font-size: 10px; color: rgba(245,196,0,.6); letter-spacing: .08em; text-transform: uppercase; }
 .cam-det-val { font-family: 'Courier New', monospace; font-size: 16px; font-weight: 700; color: #F5C400; word-break: break-all; }
-.cam-waiting { text-align: center; color: rgba(255,255,255,.4); font-size: 13px; padding: 4px 0; }
+
+/* Estado de espera */
+.cam-waiting {
+  text-align: center; color: rgba(255,255,255,.4);
+  font-size: 13px; padding: 4px 0;
+}
+
+/* Botones inferiores */
 .cam-btns { display: flex; gap: 10px; }
-.btn-cam-ok { flex: 1; padding: 16px; background: #F5C400; border: none; border-radius: 12px; color: #1A1D23; font-size: 16px; font-weight: 700; cursor: pointer; display: none; align-items: center; justify-content: center; gap: 8px; -webkit-tap-highlight-color: transparent; }
+.btn-cam-ok {
+  flex: 1; padding: 16px; background: #F5C400; border: none;
+  border-radius: 12px; color: #1A1D23; font-size: 16px; font-weight: 700;
+  cursor: pointer; display: none; align-items: center; justify-content: center; gap: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
 .btn-cam-ok.show { display: flex; }
 .btn-cam-ok:active { background: #E0B200; transform: scale(.98); }
-.btn-cam-cancel { flex: 1; padding: 16px; background: transparent; border: 1.5px solid rgba(255,255,255,.22); border-radius: 12px; color: rgba(255,255,255,.7); font-size: 16px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.btn-cam-cancel {
+  flex: 1; padding: 16px; background: transparent;
+  border: 1.5px solid rgba(255,255,255,.22); border-radius: 12px;
+  color: rgba(255,255,255,.7); font-size: 16px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
 .btn-cam-cancel:active { background: rgba(255,255,255,.06); }
-.cam-err { display: none; position: absolute; inset: 0; background: #0d0d0d; z-index: 10; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 32px 24px; text-align: center; }
+
+/* Error dentro del modal */
+.cam-err {
+  display: none; position: absolute; inset: 0;
+  background: #0d0d0d; z-index: 10;
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; padding: 32px 24px; text-align: center;
+}
 .cam-err.show { display: flex; }
 .cam-err i { font-size: 56px; color: #EF4444; }
 .cam-err-msg { font-size: 15px; color: rgba(255,255,255,.8); line-height: 1.5; font-weight: 600; }
 .cam-err-hint { font-size: 12px; color: rgba(255,255,255,.4); line-height: 1.5; }
-.btn-retry { padding: 13px 32px; background: #F5C400; border: none; border-radius: 10px; color: #1A1D23; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px; }
+.btn-retry {
+  padding: 13px 32px; background: #F5C400; border: none;
+  border-radius: 10px; color: #1A1D23; font-size: 15px; font-weight: 700;
+  cursor: pointer; margin-top: 6px;
+}
 </style>
 </head>
 <body>
@@ -298,6 +408,7 @@ tbody tr:last-child td { border-bottom: none; }
     <span id="flashMsg"></span>
   </div>
 
+  <!-- Banner WhatsApp / WebView -->
   <div class="webview-banner" id="webviewBanner">
     <i class="ti ti-brand-chrome wv-icon"></i>
     <div style="flex:1;">
@@ -331,29 +442,11 @@ tbody tr:last-child td { border-bottom: none; }
       <div class="input-cam-row">
         <input class="scan-input" id="inputDesc"
           placeholder="Escanea o escribe la ubicación..."
-          onkeydown="handleEnter(event)"
-          oninput="onUbicInput(this)"
-          autocomplete="off" />
+          onkeydown="handleEnter(event)" autocomplete="off" />
         <button class="btn-cam" id="btnCamUBIC" onclick="abrirCamara('UBIC')" title="Escanear con cámara">
           <i class="ti ti-camera"></i>
         </button>
       </div>
-      <div class="field-hint" id="ubicHint"></div>
-    </div>
-    <!-- Campo CODIGO: ahora también escaneable/editable, con lookup inverso -->
-    <div class="field-wrap">
-      <label class="field-label">Código <span style="font-weight:400;text-transform:none;letter-spacing:0;">(auto / manual)</span></label>
-      <div class="input-cam-row">
-        <input class="scan-input" id="inputCodSAP"
-          placeholder="Se completa automático, o escribe/escanea el código..."
-          onkeydown="handleEnter(event)"
-          oninput="onCodInput(this)"
-          autocomplete="off" />
-        <button class="btn-cam" id="btnCamCOD" onclick="abrirCamara('COD')" title="Escanear con cámara">
-          <i class="ti ti-camera"></i>
-        </button>
-      </div>
-      <div class="field-hint" id="codHint"></div>
     </div>
     <div class="btn-row">
       <button class="btn-primary" onclick="guardarRegistro()">
@@ -388,7 +481,7 @@ tbody tr:last-child td { border-bottom: none; }
     </div>
     <div class="search-row">
       <input class="search-input" id="searchInput"
-        placeholder="🔍 Buscar por UM, ubicación o código..."
+        placeholder="🔍 Buscar por UM o ubicación..."
         oninput="renderTabla()" />
     </div>
     <div class="table-scroll">
@@ -399,8 +492,12 @@ tbody tr:last-child td { border-bottom: none; }
   <div class="footer">Datos guardados en este navegador · Exporta a Excel para respaldar</div>
 </div>
 
-<!-- MODAL CÁMARA -->
+<!-- =====================================================
+     MODAL CÁMARA — PANTALLA COMPLETA
+     ===================================================== -->
 <div class="cam-overlay" id="camOverlay">
+
+  <!-- Barra superior con label + linterna -->
   <div class="cam-bar">
     <div class="cam-label">
       <div class="cam-dot"></div>
@@ -411,22 +508,36 @@ tbody tr:last-child td { border-bottom: none; }
       <span id="torchTxt">Linterna</span>
     </button>
   </div>
+
+  <!-- Video pantalla completa -->
   <div class="cam-video-wrap">
     <video id="videoEl" playsinline autoplay muted></video>
+
+    <!-- Sombras arriba/abajo -->
     <div class="cam-shade-top"></div>
     <div class="cam-shade-bottom"></div>
+
+    <!-- Marco de zona de escaneo -->
     <div class="cam-zone" id="camZone">
       <div class="cz-br"></div>
       <div class="cz-bl"></div>
       <div class="cam-scanline"></div>
     </div>
+
+    <!-- Texto de ayuda -->
     <div class="cam-hint"><span>Centra el código dentro del marco</span></div>
+
+    <!-- ══ PANEL FLOTANTE INFERIOR (sobre el video) ══ -->
     <div class="cam-float-bottom">
+
+      <!-- Estado de espera / detectado -->
       <div class="cam-waiting" id="camWaiting">Apunta el código al marco amarillo…</div>
       <div class="cam-detected" id="camDetected">
         <div class="cam-det-label">Código detectado</div>
         <div class="cam-det-val" id="camDetVal"></div>
       </div>
+
+      <!-- Slider zona de escaneo -->
       <div class="cam-slider-row">
         <i class="ti ti-scan" style="color:#F5C400;font-size:18px;flex-shrink:0;"></i>
         <i class="ti ti-minus" style="color:rgba(255,255,255,.5);font-size:15px;flex-shrink:0;"></i>
@@ -435,17 +546,24 @@ tbody tr:last-child td { border-bottom: none; }
         <i class="ti ti-plus" style="color:rgba(255,255,255,.5);font-size:15px;flex-shrink:0;"></i>
         <span class="zone-slider-val" id="zoneSliderVal">30%</span>
       </div>
+
+      <!-- Linterna (solo si el dispositivo la soporta) -->
       <button class="btn-torch-big" id="btnTorchBig" onclick="toggleTorch()">
         <i class="ti ti-bolt-off" id="torchIconBig"></i>
         <span id="torchTxtBig">Linterna apagada</span>
       </button>
+
+      <!-- Botones Usar / Cancelar -->
       <div class="cam-btns">
         <button class="btn-cam-ok" id="btnCamOk" onclick="confirmarScan()">
           <i class="ti ti-check"></i> Usar este código
         </button>
         <button class="btn-cam-cancel" onclick="cerrarCamara()">Cancelar</button>
       </div>
-    </div>
+
+    </div><!-- /cam-float-bottom -->
+
+    <!-- Error / permiso denegado -->
     <div class="cam-err" id="camErr">
       <i class="ti ti-camera-off"></i>
       <div class="cam-err-msg" id="camErrMsg">No se pudo acceder a la cámara</div>
@@ -453,99 +571,15 @@ tbody tr:last-child td { border-bottom: none; }
       <button class="btn-retry" onclick="reintentar()">Reintentar</button>
     </div>
   </div>
-</div>
+
+</div><!-- /cam-overlay -->
 
 <script>
-/* =====================================================
-   LOOKUP TABLES (generado de UBICAR.xlsx)
-   ubic_to_cod : UBICACION(upper) -> CODIGO
-   cod_to_ubic : CODIGO(upper)    -> UBICACION
-   ===================================================== */
-const UBIC_TO_COD = __UBIC_TO_COD__;
-const COD_TO_UBIC = __COD_TO_UBIC__;
-
-function lookupCodigo(ubicacion) {
-  if (!ubicacion) return '';
-  return UBIC_TO_COD[ubicacion.trim().toUpperCase()] || '';
-}
-function lookupUbicacion(codigo) {
-  if (!codigo) return '';
-  return COD_TO_UBIC[codigo.trim().toUpperCase()] || '';
-}
-
 /* =====================================================
    DB
    ===================================================== */
 let db = [];
 try { db = JSON.parse(localStorage.getItem('palletDB') || '[]'); } catch(e) { db = []; }
-
-/* =====================================================
-   AUTO-LLENADO BIDIRECCIONAL
-   Ubicación -> Código  y  Código -> Ubicación
-   ===================================================== */
-function onUbicInput(input) {
-  // si este campo tenía un estilo "auto" puesto por el código, lo limpiamos
-  // porque ahora el usuario está escribiendo/escaneando la ubicación directamente
-  input.classList.remove('auto-filled', 'not-found');
-  document.getElementById('ubicHint').textContent = '';
-  actualizarCodSAP(input.value);
-}
-
-function onCodInput(input) {
-  input.classList.remove('auto-filled', 'not-found');
-  document.getElementById('codHint').textContent = '';
-  actualizarUbicacion(input.value);
-}
-
-function actualizarCodSAP(ubicVal) {
-  const codField = document.getElementById('inputCodSAP');
-  const hint     = document.getElementById('codHint');
-  const val      = (ubicVal || '').trim();
-
-  if (!val) {
-    codField.value = '';
-    codField.className = 'scan-input';
-    hint.textContent = '';
-    return;
-  }
-  const cod = lookupCodigo(val);
-  if (cod) {
-    codField.value = cod;
-    codField.className = 'scan-input auto-filled';
-    hint.textContent = '✔ Código encontrado en la tabla de ubicaciones';
-    hint.style.color = '#10B981';
-  } else {
-    codField.value = 'N/A';
-    codField.className = 'scan-input not-found';
-    hint.textContent = '⚠ Ubicación no encontrada en la tabla — se registrará como N/A';
-    hint.style.color = '#D97706';
-  }
-}
-
-function actualizarUbicacion(codVal) {
-  const ubicField = document.getElementById('inputDesc');
-  const hint      = document.getElementById('ubicHint');
-  const val       = (codVal || '').trim();
-
-  if (!val) {
-    ubicField.value = '';
-    ubicField.className = 'scan-input';
-    hint.textContent = '';
-    return;
-  }
-  const ubic = lookupUbicacion(val);
-  if (ubic) {
-    ubicField.value = ubic;
-    ubicField.className = 'scan-input auto-filled';
-    hint.textContent = '✔ Ubicación encontrada en la tabla de códigos';
-    hint.style.color = '#10B981';
-  } else {
-    ubicField.value = 'N/A';
-    ubicField.className = 'scan-input not-found';
-    hint.textContent = '⚠ Código no encontrado en la tabla — se registrará como N/A';
-    hint.style.color = '#D97706';
-  }
-}
 
 /* =====================================================
    DETECCIÓN WEBVIEW
@@ -569,7 +603,7 @@ function abrirChrome() {
 function verificarEntorno() {
   if (!esWebView()) return;
   document.getElementById('webviewBanner').classList.add('show');
-  ['btnCamUM','btnCamUBIC','btnCamCOD'].forEach(id => {
+  ['btnCamUM','btnCamUBIC'].forEach(id => {
     const b = document.getElementById(id);
     b.classList.add('blocked');
     b.onclick = () => {
@@ -587,7 +621,7 @@ let lastResult   = '';
 let scanActive   = false;
 let activeStream = null;
 let scanRafId    = null;
-let detector     = null;
+let detector     = null;   // BarcodeDetector nativo
 let torchOn      = false;
 let torchOk      = false;
 
@@ -601,19 +635,18 @@ function abrirCamara(target) {
   scanActive = true;
   resetUI();
   document.getElementById('camLabel').textContent =
-    target === 'UM'   ? '📦 Escaneando UM' :
-    target === 'UBIC' ? '📍 Escaneando Ubicación' :
-                         '🔢 Escaneando Código';
+    target === 'UM' ? '📦 Escaneando UM' : '📍 Escaneando Ubicación';
   document.getElementById('camErr').classList.remove('show');
   document.getElementById('camOverlay').classList.add('show');
   initSlider();
 
+  /* Constraints: trasera + alta resolución + autofocus continuo */
   navigator.mediaDevices.getUserMedia({
     video: {
       facingMode: { ideal: 'environment' },
       width:  { ideal: 1920 },
       height: { ideal: 1080 },
-      focusMode: { ideal: 'continuous' }
+      focusMode: { ideal: 'continuous' }   /* foco continuo */
     }
   })
   .then(stream => arrancarStream(stream))
@@ -629,12 +662,17 @@ function arrancarStream(stream) {
   activeStream = stream;
   const video  = document.getElementById('videoEl');
   video.srcObject = stream;
+
+  /* Verificar soporte de linterna */
   const track = stream.getVideoTracks()[0];
   if (track?.getCapabilities) {
     torchOk = !!(track.getCapabilities().torch);
-    document.getElementById('btnTorch').style.display = 'none';
-    document.getElementById('btnTorchBig').style.display = torchOk ? 'flex' : 'none';
+    const btn    = document.getElementById('btnTorch');
+    const btnBig = document.getElementById('btnTorchBig');
+    btn.style.display    = 'none'; /* Solo mostramos el botón grande inferior */
+    btnBig.style.display = torchOk ? 'flex' : 'none';
   }
+
   video.onloadedmetadata = () => {
     video.play().then(() => {
       iniciarDetector();
@@ -656,17 +694,7 @@ function cerrarCamara() {
 
 function confirmarScan() {
   if (!lastResult) return;
-  if (camTarget === 'UM') {
-    document.getElementById('inputCodigo').value = lastResult;
-  } else if (camTarget === 'UBIC') {
-    const f = document.getElementById('inputDesc');
-    f.value = lastResult;
-    onUbicInput(f);
-  } else if (camTarget === 'COD') {
-    const f = document.getElementById('inputCodSAP');
-    f.value = lastResult;
-    onCodInput(f);
-  }
+  document.getElementById(camTarget === 'UM' ? 'inputCodigo' : 'inputDesc').value = lastResult;
   cerrarCamara();
   /* Foco al otro campo si está vacío */
   const otro = document.getElementById(camTarget === 'UM' ? 'inputDesc' : 'inputCodigo');
@@ -674,7 +702,7 @@ function confirmarScan() {
 }
 
 /* =====================================================
-   DETECTOR
+   DETECTOR DE BARRAS — BarcodeDetector → canvas+ZXing
    ===================================================== */
 function iniciarDetector() {
   if ('BarcodeDetector' in window) {
@@ -694,7 +722,7 @@ const offCtx    = offscreen.getContext('2d');
 function iniciarLoop() {
   const video = document.getElementById('videoEl');
   let lastTick = 0;
-  const INTERVAL = 120;
+  const INTERVAL = 120; /* ms entre capturas ≈ 8 fps — balance velocidad/batería */
 
   function tick(ts) {
     if (!scanActive) return;
@@ -703,7 +731,10 @@ function iniciarLoop() {
     lastTick = ts;
     if (video.readyState < 2 || video.videoWidth === 0) return;
 
-    const vw = video.videoWidth, vh = video.videoHeight;
+    /* ── Recortar SOLO la franja central del video (30% alto) ── */
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
+    /* La zona visible es zonePct% central en alto y 88% en ancho */
     const margen = (100 - zonePct) / 2 / 100;
     const cropW = Math.round(vw * 0.88);
     const cropH = Math.round(vh * (zonePct / 100));
@@ -715,10 +746,12 @@ function iniciarLoop() {
     offCtx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
 
     if (detector) {
+      /* BarcodeDetector nativo — más rápido y preciso */
       detector.detect(offscreen)
         .then(codes => { if (codes?.length) onDetectado(codes[0].rawValue); })
         .catch(() => {});
     } else {
+      /* Fallback ZXing */
       usarZXing(offscreen);
     }
   }
@@ -729,6 +762,8 @@ let zxReader = null;
 function usarZXing(canvas) {
   if (typeof ZXing === 'undefined') return;
   if (!zxReader) {
+    zxReader = new ZXing.BrowserMultiFormatReader();
+    /* Hints: preferir Code128 y QR que son los más comunes en logística */
     const hints = new Map();
     hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, [
       ZXing.BarcodeFormat.CODE_128,
@@ -741,10 +776,11 @@ function usarZXing(canvas) {
     hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
     zxReader = new ZXing.BrowserMultiFormatReader(hints);
   }
+  /* Decodificar directamente del canvas (sin blob, más rápido) */
   try {
     const result = zxReader.decodeFromCanvas(canvas);
     if (result) onDetectado(result.getText());
-  } catch(e) {}
+  } catch(e) { /* no detectado, continuar */ }
 }
 
 function onDetectado(texto) {
@@ -758,25 +794,39 @@ function onDetectado(texto) {
 }
 
 /* =====================================================
-   ZONA AJUSTABLE
+   ZONA DE ESCANEO AJUSTABLE
    ===================================================== */
-let zonePct = 30;
+let zonePct = 30; /* % de alto que ocupa la zona (por defecto 30%) */
 
 function ajustarZona(val) {
   zonePct = parseInt(val);
   document.getElementById('zoneSliderVal').textContent = zonePct + '%';
+
+  /* Pintar el track del slider (compatible con Chrome/Safari móvil) */
   const slider = document.getElementById('zoneSlider');
   const pct = ((zonePct - 15) / (70 - 15)) * 100;
-  slider.style.background = `linear-gradient(to right, #F5C400 ${pct}%, rgba(255,255,255,0.2) ${pct}%)`;
+  slider.style.background =
+    `linear-gradient(to right, #F5C400 ${pct}%, rgba(255,255,255,0.2) ${pct}%)`;
+
+  /* Calcular márgenes: zona centrada verticalmente */
   const margen = Math.round((100 - zonePct) / 2);
+
+  /* Zona visual (marco amarillo) */
   const zone = document.getElementById('camZone');
   zone.style.top    = margen + '%';
   zone.style.bottom = margen + '%';
-  document.querySelector('.cam-shade-top').style.height    = margen + '%';
-  document.querySelector('.cam-shade-bottom').style.height = margen + '%';
+
+  /* Sombras arriba/abajo */
+  const shadeTop    = document.querySelector('.cam-shade-top');
+  const shadeBottom = document.querySelector('.cam-shade-bottom');
+  shadeTop.style.height    = margen + '%';
+  shadeBottom.style.height = margen + '%';
+
+  /* Hint de texto justo encima de la zona */
   document.querySelector('.cam-hint').style.top = Math.max(margen - 9, 1) + '%';
 }
 
+/* Inicializar slider con valor guardado o default */
 function initSlider() {
   const saved = parseInt(localStorage.getItem('zonePct') || '30');
   zonePct = saved;
@@ -785,9 +835,11 @@ function initSlider() {
   ajustarZona(saved);
 }
 
+/* Guardar preferencia al cerrar */
 function guardarZonaPref() {
   localStorage.setItem('zonePct', zonePct);
 }
+
 
 async function toggleTorch() {
   if (!activeStream) return;
@@ -803,21 +855,25 @@ async function toggleTorch() {
   }
 }
 function actualizarTorch() {
-  document.getElementById('torchIcon').className    = torchOn ? 'ti ti-bolt' : 'ti ti-bolt-off';
-  document.getElementById('torchTxt').textContent   = torchOn ? 'Encendida' : 'Linterna';
-  document.getElementById('btnTorch').classList.toggle('on', torchOn);
+  const btn    = document.getElementById('btnTorch');
+  const btnBig = document.getElementById('btnTorchBig');
+  // Barra superior
+  document.getElementById('torchIcon').className = torchOn ? 'ti ti-bolt' : 'ti ti-bolt-off';
+  document.getElementById('torchTxt').textContent = torchOn ? 'Encendida' : 'Linterna';
+  btn.classList.toggle('on', torchOn);
+  // Botón grande inferior
   document.getElementById('torchIconBig').className = torchOn ? 'ti ti-bolt' : 'ti ti-bolt-off';
   document.getElementById('torchTxtBig').textContent = torchOn ? '💡 Linterna encendida' : 'Linterna apagada';
-  document.getElementById('btnTorchBig').classList.toggle('on', torchOn);
+  btnBig.classList.toggle('on', torchOn);
 }
 
 /* =====================================================
    ERROR MODAL
    ===================================================== */
 function mostrarError(err) {
-  const msg = document.getElementById('camErrMsg');
+  const msg  = document.getElementById('camErrMsg');
   const hint = document.getElementById('camErrHint');
-  const n = err?.name || '';
+  const n    = err?.name || '';
   if (n === 'NotAllowedError' || n === 'PermissionDeniedError') {
     msg.textContent  = 'Permiso de cámara denegado';
     hint.textContent = 'Toca ⋮ → Configuración del sitio → Cámara → Permitir, luego recarga la página.';
@@ -834,6 +890,9 @@ function mostrarError(err) {
   document.getElementById('camErr').classList.add('show');
 }
 
+/* =====================================================
+   RESET UI MODAL
+   ===================================================== */
 function resetUI() {
   lastResult = '';
   document.getElementById('camDetVal').textContent = '';
@@ -848,10 +907,8 @@ function resetUI() {
 function handleEnter(e) { if (e.key === 'Enter') guardarRegistro(); }
 
 function guardarRegistro() {
-  const codigo   = document.getElementById('inputCodigo').value.trim();
-  const desc     = document.getElementById('inputDesc').value.trim();
-  const codSAP   = document.getElementById('inputCodSAP').value.trim();
-
+  const codigo = document.getElementById('inputCodigo').value.trim();
+  const desc   = document.getElementById('inputDesc').value.trim();
   if (!codigo) {
     showFlash('Por favor ingresa o escanea una UM.', 'error');
     document.getElementById('inputCodigo').focus(); return;
@@ -865,7 +922,6 @@ function guardarRegistro() {
   const ahora = new Date();
   db.unshift({
     id: Date.now(), codigo, descripcion: desc,
-    codSAP: codSAP || 'N/A',
     fecha: ahora.toLocaleDateString('es-CO'),
     hora:  ahora.toLocaleTimeString('es-CO', {hour:'2-digit',minute:'2-digit',second:'2-digit'})
   });
@@ -875,16 +931,10 @@ function guardarRegistro() {
 }
 
 function limpiarCampos() {
-  document.getElementById('inputCodigo').value  = '';
-  document.getElementById('inputDesc').value    = '';
-  document.getElementById('inputDesc').className   = 'scan-input';
-  document.getElementById('ubicHint').textContent  = '';
-  document.getElementById('inputCodSAP').value  = '';
-  document.getElementById('inputCodSAP').className = 'scan-input';
-  document.getElementById('codHint').textContent   = '';
+  document.getElementById('inputCodigo').value = '';
+  document.getElementById('inputDesc').value   = '';
   document.getElementById('inputCodigo').focus();
 }
-
 function eliminarRegistro(id) {
   if (!confirm('¿Eliminar este registro?')) return;
   db = db.filter(r => r.id !== id);
@@ -902,57 +952,42 @@ function guardarDB() { try { localStorage.setItem('palletDB', JSON.stringify(db)
 
 function showFlash(msg, tipo) {
   const bar = document.getElementById('flashBar');
-  document.getElementById('flashIcon').className = tipo === 'success' ? 'ti ti-check' : tipo === 'info' ? 'ti ti-info-circle' : 'ti ti-alert-circle';
+  document.getElementById('flashIcon').className = tipo === 'success' ? 'ti ti-check' : 'ti ti-alert-circle';
   document.getElementById('flashMsg').textContent = msg;
   bar.className = 'flash-bar show ' + tipo;
   clearTimeout(bar._t);
   bar._t = setTimeout(() => { bar.className = 'flash-bar'; }, 3500);
 }
-
 function actualizarStats() {
   document.getElementById('statTotal').textContent = db.length;
   document.getElementById('statUMs').textContent   = db.length;
   document.getElementById('statUbic').textContent  = db.filter(r => r.descripcion).length;
 }
-
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
 function renderTabla() {
   const q   = (document.getElementById('searchInput').value || '').toLowerCase();
-  const fil = db.filter(r =>
-    r.codigo.toLowerCase().includes(q) ||
-    (r.descripcion||'').toLowerCase().includes(q) ||
-    (r.codSAP||'').toLowerCase().includes(q)
-  );
-  const c = document.getElementById('tableContainer');
+  const fil = db.filter(r => r.codigo.toLowerCase().includes(q) || (r.descripcion||'').toLowerCase().includes(q));
+  const c   = document.getElementById('tableContainer');
   if (!fil.length) {
     c.innerHTML = `<div class="empty-state"><i class="ti ti-barcode-off"></i><p>${q?'Sin resultados.':'Aún no hay registros. Escanea tu primer pallet.'}</p></div>`;
     return;
   }
   c.innerHTML = `<table>
     <thead><tr>
-      <th>UM (pallet)</th>
-      <th>Ubicación</th>
-      <th>Código</th>
-      <th style="text-align:right;">Fecha / Hora</th>
-      <th></th>
+      <th>UM (pallet)</th><th>Ubicación</th>
+      <th style="text-align:right;">Fecha / Hora</th><th></th>
     </tr></thead>
-    <tbody>${fil.map(r => {
-      const cod = r.codSAP || 'N/A';
-      const badgeClass = (cod && cod !== 'N/A') ? 'badge-cod found' : 'badge-cod na';
-      return `
+    <tbody>${fil.map(r=>`
     <tr>
       <td class="td-mono">${esc(r.codigo)}</td>
       <td class="td-muted">${esc(r.descripcion||'—')}</td>
-      <td class="td-cod"><span class="${badgeClass}">${esc(cod)}</span></td>
       <td class="td-right">${esc(r.fecha)}<br>${esc(r.hora)}</td>
       <td style="text-align:right;padding-right:8px;">
         <button class="btn-del" onclick="eliminarRegistro(${r.id})"><i class="ti ti-trash"></i></button>
       </td>
-    </tr>`;
-    }).join('')}</tbody>
+    </tr>`).join('')}</tbody>
   </table>`;
 }
 
@@ -961,26 +996,19 @@ function renderTabla() {
    ===================================================== */
 function exportarExcel() {
   if (!db.length) { showFlash('No hay datos para exportar.', 'error'); return; }
-  const datos = db.map(r=>({
-    'UM (pallet)': r.codigo,
-    'Ubicación':   r.descripcion||'',
-    'Código':      r.codSAP||'N/A',
-    'Fecha':       r.fecha,
-    'Hora':        r.hora
-  }));
+  const datos = db.map(r=>({'UM (pallet)':r.codigo,'Ubicación':r.descripcion||'','Fecha':r.fecha,'Hora':r.hora}));
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(datos);
-  ws['!cols'] = [{wch:22},{wch:22},{wch:18},{wch:14},{wch:12}];
+  ws['!cols'] = [{wch:30},{wch:30},{wch:14},{wch:12}];
   XLSX.utils.book_append_sheet(wb, ws, 'Pallets');
   XLSX.writeFile(wb, 'pallets_'+new Date().toISOString().slice(0,10)+'.xlsx');
   showFlash('Excel descargado correctamente.', 'success');
 }
-
 function exportarCSV() {
   if (!db.length) { showFlash('No hay datos para exportar.', 'error'); return; }
-  const rows = db.map(r=>[r.codigo, r.descripcion||'', r.codSAP||'N/A', r.fecha, r.hora]
+  const rows = db.map(r=>[r.codigo,r.descripcion||'',r.fecha,r.hora]
     .map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob = new Blob(['\uFEFF'+'UM (pallet),Ubicación,Código,Fecha,Hora\n'+rows],{type:'text/csv;charset=utf-8;'});
+  const blob = new Blob(['\uFEFF'+'UM (pallet),Ubicación,Fecha,Hora\n'+rows],{type:'text/csv;charset=utf-8;'});
   const a = Object.assign(document.createElement('a'),
     {href:URL.createObjectURL(blob), download:'pallets_'+new Date().toISOString().slice(0,10)+'.csv'});
   a.click(); URL.revokeObjectURL(a.href);
@@ -995,7 +1023,9 @@ renderTabla();
 actualizarStats();
 </script>
 
+<!-- ZXing: fallback si BarcodeDetector no está disponible -->
 <script async src="https://unpkg.com/@zxing/library@0.19.1/umd/index.min.js"></script>
+
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
